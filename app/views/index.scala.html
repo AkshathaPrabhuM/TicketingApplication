@@ -5,8 +5,12 @@
 @main("Ticketing System") {
 <div ng-app="myApp" ng-controller="customersCtrl">
 
-	<h1>Ticketing System</h1>
-	
+	<div class="jumbotron">
+    	<h1>Ticketing Application</h1>      
+    	<p>Keeps track of customer complaints..</p>      
+  	</div>
+  	
+  	<div ng-show="@tasks.size() > 0">
     <h3>Available Tickets</h3>
     <h4>@tasks.size() tickets(s)</h4>
     
@@ -25,35 +29,11 @@
   			@for(task <- tasks) {
     		<tr>
       			<td style="width: 25%;">
-        			<button class="btn btn-info" ng-click="editUser('update', '@task.id', '@task.custName', '@task.comments', '@task.creator', '@task.assignee', '@task.status')">
+        			&nbsp &nbsp 
+        			<button class="btn btn-info" ng-click="editUser('assign', '@task.id', '@task.custName', '@task.comments', '@task.creator', '@task.assignee', '@task.status')">
           				<span class="glyphicon glyphicon-user"></span>  Assign
         			</button>
-      			</td>
-      			<td>@task.custName</td>
-      			<td>@task.comments</td>
-      			<td>@task.creator</td>
-      			<td>@task.assignee</td>
-      			<td>@task.status</td>
-    		</tr>
-    		}
-  		</tbody>
-	</table>
-	
-	    <table class="table table-striped">
-  		<thead>
-    		<tr>
-      			<th>Edit</th>
-      			<th>Customer Name</th>
-      			<th>Comments</th>
-      			<th>Creator</th>
-      			<th>Assignee</th>
-      			<th>Status</th>
-   			</tr>
- 	 	</thead>
-  		<tbody>
-  			@for(task <- tasks) {
-    		<tr>
-      			<td style="width: 25%;">
+        			&nbsp &nbsp
         			<button class="btn btn-primary" ng-click="editUser('update', '@task.id', '@task.custName', '@task.comments', '@task.creator', '@task.assignee', '@task.status')">
           				<span class="glyphicon glyphicon-pencil"></span>  Update
         			</button>
@@ -67,7 +47,9 @@
     		}
   		</tbody>
 	</table>
+	</div>
 	
+	<div ng-show="@tasks.size>0 && isDelete && !isUpdate && !isAssign">
 	<table class="table table-striped">
   		<thead>
     		<tr>
@@ -84,6 +66,7 @@
     		<tr>
       			<td style="width: 25%;">
       				<form class="form-horizontal" action="@routes.Application.deleteTask(task.id)" method="post">
+      					&nbsp &nbsp
         				<button class="btn btn-danger">
           					<span class="glyphicon glyphicon-minus-sign"></span>  Delete
         				</button>
@@ -98,146 +81,170 @@
     		}
   		</tbody>
 	</table>
+	</div>
 	
+		&nbsp &nbsp
+		<button class="btn btn-success" ng-show="isUpdate || isAssign" ng-click="createTicket()">
+			<span class="glyphicon glyphicon-save"></span>  Create new Ticket
+		</button>
+		&nbsp &nbsp
+		<button class="btn btn-danger" ng-show="isUpdate || isAssign || isCreate" ng-click="deleteTickets()">
+			<span class="glyphicon glyphicon-minus-sign"></span>  Delete Tickets
+		</button>
     
+    <div ng-show="isCreate">
     <h3>Create New Ticket:</h3>
 	<form class="form-horizontal" action="@routes.Application.newTask()" method="post">
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Customer Name: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="custName" placeholder="Customer Name">
+    			<input type="text" class="form-control" name="custName" id="custName" ng-model="custName" value={{custName}} required>
     		</div>
   		</div> 
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Comments: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="comments" placeholder="Comments (If Any)">
+    			<textarea class="form-control" name="comments" id="comments" ng-model="comments" value={{comments}} required></textarea>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Created By: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="creator" placeholder="Created By">
+    			<input type="text" class="form-control" name="creator" id="creator" ng-model="creator" value={{creator}} required>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Assigned To: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="assignee" placeholder="Assign To">
+    			<input type="text" class="form-control" name="assignee" id="assignee" ng-model="assignee" value={{assignee}} required>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Status: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="status" placeholder="Status">
+    			<select required name="status" id="status" ng-model="status" ng-init={{status}} class="form-control">
+    			<option></option>
+            		<option>New</option>
+          		</select>
     		</div>
   		</div>
-  		<button class="btn btn-success">
+  		<span style="margin-left:750px"></span>  
+  		<button class="btn btn-success" ng-disabled="incomplete">
 			<span class="glyphicon glyphicon-save"></span>  Submit Ticket
 		</button>
 	</form>
+	</div>
 	
-	<h3>Update Ticket:</h3>
+	<div ng-show="isUpdate || isAssign">
+	<h3 ng-show="isUpdate">Update Ticket:</h3>
+	<h3 ng-show="isAssign">Assign Ticket:</h3>
 	<form class="form-horizontal" action="@routes.Application.updateTask()" method="post">
 		<input type="text" name="id" ng-show="false" value ={{taskId}}>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Customer Name: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="custName" value={{custName}}>
+    			<input type="text" class="form-control" name="custName" id="custName" ng-model="custName" value={{custName}} disabled>
     		</div>
   		</div> 
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Comments: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="comments" value={{comments}}>
+    			<textarea class="form-control" name="comments" id="comments" ng-model="comments" value={{comments}} required></textarea>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Created By: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="creator" value={{creator}}>
+    			<input type="text" class="form-control" name="creator" id="creator" ng-model="creator" value={{creator}} disabled>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Assigned To: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="assignee" value={{assignee}}>
+    			<input type="text" class="form-control" name="assignee" id="assignee" ng-model="assignee" value={{assignee}} ng-disabled="isAssigneeDisabled" required>
     		</div>
   		</div>
   		<div class="form-group">
     		<label class="col-sm-2 control-label">Status: </label>
     		<div class="col-sm-10">
-    			<input type="text" name="status" value={{status}}>
+    			<select required name="status" id="status" ng-model="status" class="form-control" ng-init={{status}} ng-disabled="isStatusDisabled">
+    				<option>New</option>
+            		<option>Open</option>
+            		<option>Closed</option>
+          		</select>
     		</div>
   		</div>
-  		<button class="btn btn-success">
+  		<span style="margin-left:750px"></span>  
+  		<button class="btn btn-success" ng-show="isUpdate">
 			<span class="glyphicon glyphicon-upload"></span>  Update Ticket
 		</button>
-	</form>
-	
-	<h3>Update Assignee:</h3>
-	<form class="form-horizontal" action="@routes.Application.updateTask()" method="post">
-		<input type="text" name="id" ng-show="false" value ={{taskId}}>
-  		<div class="form-group">
-    		<label class="col-sm-2 control-label">Customer Name: </label>
-    		<div class="col-sm-10">
-    			<input type="text" name="custName" value={{custName}}>
-    		</div>
-  		</div> 
-  		<div class="form-group">
-    		<label class="col-sm-2 control-label">Comments: </label>
-    		<div class="col-sm-10">
-    			<input type="text" name="comments" value={{comments}}>
-    		</div>
-  		</div>
-  		<div class="form-group">
-    		<label class="col-sm-2 control-label">Created By: </label>
-    		<div class="col-sm-10">
-    			<input type="text" name="creator" value={{creator}}>
-    		</div>
-  		</div>
-  		<div class="form-group">
-    		<label class="col-sm-2 control-label">Assigned To: </label>
-    		<div class="col-sm-10">
-    			<input type="text" name="assignee" value={{assignee}}>
-    		</div>
-  		</div>
-  		<div class="form-group">
-    		<label class="col-sm-2 control-label">Status: </label>
-    		<div class="col-sm-10">
-    			<input type="text" name="status" value={{status}}>
-    		</div>
-  		</div>
-  		<button class="btn btn-success">
+		<button class="btn btn-success" ng-show="isAssign">
 			<span class="glyphicon glyphicon-user"></span>  Assign Ticket
 		</button>
 	</form>
+	</div>
+	
 	
 </div>    
 <script>
 angular.module('myApp', []).controller('customersCtrl', function($scope) {
 
+$scope.isCreate=true;
+$scope.isUpdate=false;
+$scope.isAssign=false;
+$scope.isDelete=false;
+
+$scope.createTicket = function() {
+$scope.isCreate=true;
+$scope.isUpdate=false;
+$scope.isAssign=false;
+$scope.custName = "";
+$scope.comments="";
+$scope.creator = "";
+$scope.assignee = "";
+$scope.status = "";
+};
+
+$scope.deleteTickets=function(){
+$scope.isDelete=true;
+};
+
 $scope.editUser = function(action,id, custName, comments, creator, assignee, status) {
-  if (action == 'update') {
+	$scope.isAssigneeDisabled=false;
+  if (action == 'update') 
+  {
+  	$scope.isUpdate =true;
+  	$scope.isCreate=false;
+	$scope.isAssign=false;
     $scope.taskId= id;
     $scope.custName = custName;
     $scope.comments=comments;
     $scope.creator = creator;
     $scope.assignee = assignee;
     $scope.status = status;
+    $scope.isStatusDisabled=false;
+    if(status=="Closed")
+    {
+    $scope.isStatusDisabled=true;
+    $scope.isAssigneeDisabled=true;
+    }
   }
   else if(action=='assign')
   {
-   $scope.taskId= id;
+  	$scope.isAssign=true;
+  	$scope.isCreate=false;
+	$scope.isUpdate=false;
+   	$scope.taskId= id;
     $scope.custName = custName;
     $scope.comments=comments;
     $scope.creator = creator;
     $scope.assignee = assignee;
-    $scope.status = status;
+    $scope.status = "Open";
+    $scope.isStatusDisabled=true;
   }
 };
 
-
 });
+
 </script>
 }

@@ -9,20 +9,25 @@ import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.running;
 
-public class TaskSpec {
+public class TaskSpec
+{
 
     @Before
-    public void initialize() {
+    public void initialize()
+    {
         Task.removeAll();
     }
 
     @Test
-    public void beAddable() {
-        running(fakeApplication(), new Runnable() {
-            public void run() {
+    public void beAddable()
+    {
+        running(fakeApplication(), new Runnable()
+        {
+            public void run()
+            {
                 String testLabel = "Task label";
-                Task.create(testLabel);
-                    List<Task> tasks = Task.all();
+                Task.create(testLabel, "desc", "creator", "assignee", "New");
+                List<Task> tasks = Task.all();
 
                 assertThat(tasks.size()).isEqualTo(1);
                 assertThat(tasks.get(0).custName).isEqualTo(testLabel);
@@ -31,9 +36,10 @@ public class TaskSpec {
     }
 
     @Test
-    public void beDeletable(){
+    public void beDeletable()
+    {
         String testLabel = "Task label";
-        Task.create(testLabel);
+        Task.create(testLabel, "desc", "creator", "assignee", "New");
 
         List<Task> tasks = Task.all();
         Task.delete(tasks.get(0).id);
