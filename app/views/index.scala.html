@@ -1,4 +1,4 @@
-@(tasks: List[Task], taskForm: Form[Task])
+@(tickets: List[Ticket], ticketForm: Form[Ticket])
 
 @import helper._
 
@@ -11,9 +11,9 @@
   	</div>
   	
   	
-  	<div ng-show="@tasks.size() > 0">
+  	<div ng-show="@tickets.size() > 0">
     	<h3>Available Tickets</h3>
-    	<h4>@tasks.size() tickets(s)</h4>
+    	<h4>@tickets.size() tickets(s)</h4>
     
     	<table class="table table-striped">
 	  		<thead>
@@ -28,25 +28,25 @@
 	   			</tr>
 	 	 	</thead>
   			<tbody>
-  				@for(task <- tasks) {
+  				@for(ticket <- tickets) {
     				<tr>
       					<td style="width: 25%;">
 		        			&nbsp &nbsp 
-		        			<button class="btn btn-info" ng-click="editUser('assign', '@task.id', '@task.custName', '@task.comments', '@task.creator', '@task.assignee', '@task.status')">
+		        			<button class="btn btn-info" ng-click="editUser('assign', '@ticket.id', '@ticket.custName', '@ticket.comments', '@ticket.creator', '@ticket.assignee', '@ticket.status')">
 		          				<span class="glyphicon glyphicon-user"></span>  Assign
 		        			</button>
 		        			&nbsp &nbsp
-		        			<button class="btn btn-primary" ng-click="editUser('update', '@task.id', '@task.custName', '@task.comments', '@task.creator', '@task.assignee', '@task.status')">
+		        			<button class="btn btn-primary" ng-click="editUser('update', '@ticket.id', '@ticket.custName', '@ticket.comments', '@ticket.creator', '@ticket.assignee', '@ticket.status')">
 		          				<span class="glyphicon glyphicon-pencil"></span>  Update
 		        			</button>
 		      			</td>
-		      			<td>@task.custName</td>
-		      			<td>@task.comments</td>
-		      			<td>@task.creator</td>
-		      			<td>@task.assignee</td>
-		      			<td>@task.status</td>
+		      			<td>@ticket.custName</td>
+		      			<td>@ticket.comments</td>
+		      			<td>@ticket.creator</td>
+		      			<td>@ticket.assignee</td>
+		      			<td>@ticket.status</td>
 		      			<td>
-		      				<form class="form-horizontal" action="@routes.Application.deleteTask(task.id)" method="post">
+		      				<form class="form-horizontal" action="@routes.Application.deleteTicket(ticket.id)" method="post">
 		        				<button class="btn btn-danger">
 		          					<span class="glyphicon glyphicon-minus-sign"></span> Delete 
 		        				</button>
@@ -65,7 +65,7 @@
     
     <div ng-show="isCreate">
 	    <h3>Create New Ticket:</h3>
-		<form class="form-horizontal" action="@routes.Application.newTask()" method="post">
+		<form class="form-horizontal" action="@routes.Application.newTicket()" method="post">
 	  		<div class="form-group">
 	    		<label class="col-sm-2 control-label">Customer Name: </label>
 	    		<div class="col-sm-10">
@@ -104,8 +104,8 @@
 	<div ng-show="isUpdate || isAssign">
 		<h3 ng-show="isUpdate">Update Ticket:</h3>
 		<h3 ng-show="isAssign">Assign Ticket:</h3>
-		<form class="form-horizontal" action="@routes.Application.updateTask()" method="post">
-			<input type="text" name="id" ng-show="false" value ={{taskId}}>
+		<form class="form-horizontal" action="@routes.Application.updateTicket()" method="post">
+			<input type="text" name="id" ng-show="false" value ={{ticketId}}>
 	  		<div class="form-group">
 	    		<label class="col-sm-2 control-label">Customer Name: </label>
 	    		<div class="col-sm-10">
@@ -186,7 +186,7 @@ angular.module('myApp', []).controller('customersCtrl', function($scope)
 			$scope.isUpdate =true;
 		  	$scope.isCreate=false;
 			$scope.isAssign=false;
-		    $scope.taskId= id;
+		    $scope.ticketId= id;
 		    $scope.custName = custName;
 		    $scope.comments=comments;
 		    $scope.creator = creator;
@@ -203,7 +203,7 @@ angular.module('myApp', []).controller('customersCtrl', function($scope)
 		  	$scope.isAssign=true;
 		  	$scope.isCreate=false;
 			$scope.isUpdate=false;
-		   	$scope.taskId= id;
+		   	$scope.ticketId= id;
 		    $scope.custName = custName;
 		    $scope.comments=comments;
 		    $scope.creator = creator;

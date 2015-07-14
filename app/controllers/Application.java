@@ -1,58 +1,55 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import models.Task;
+import models.Ticket;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 public class Application extends Controller
 {
-    static Form<Task> taskForm = Form.form(Task.class);
+    static Form<Ticket> ticketForm = Form.form(Ticket.class);
 
     public static Result index()
     {
-        return redirect(routes.Application.tasks());
+        return redirect(routes.Application.tickets());
     }
 
-    public static Result tasks()
+    public static Result tickets()
     {
-        return ok(views.html.index.render(Task.all(), taskForm));
+        return ok(views.html.index.render(Ticket.all(), ticketForm));
     }
 
-    public static Result newTask()
+    public static Result newTicket()
     {
-        Form<Task> filledForm = taskForm.bindFromRequest();
+        Form<Ticket> filledForm = ticketForm.bindFromRequest();
         if (filledForm.hasErrors())
         {
-            return badRequest(views.html.index.render(Task.all(), filledForm));
+            return badRequest(views.html.index.render(Ticket.all(), filledForm));
         }
         else
         {
-            Task.create(filledForm.get());
-            return redirect(routes.Application.tasks());
+            Ticket.create(filledForm.get());
+            return redirect(routes.Application.tickets());
         }
     }
 
-    public static Result deleteTask(String id)
+    public static Result deleteTicket(String id)
     {
-        Task.delete(id);
-        return redirect(routes.Application.tasks());
+        Ticket.delete(id);
+        return redirect(routes.Application.tickets());
     }
 
-    public static Result updateTask()
+    public static Result updateTicket()
     {
-        Form<Task> filledForm = taskForm.bindFromRequest();
+        Form<Ticket> filledForm = ticketForm.bindFromRequest();
         if (filledForm.hasErrors())
         {
-            return badRequest(views.html.index.render(Task.all(), filledForm));
+            return badRequest(views.html.index.render(Ticket.all(), filledForm));
         }
         else
         {
-            Task.update(filledForm.get());
-            return redirect(routes.Application.tasks());
+            Ticket.update(filledForm.get());
+            return redirect(routes.Application.tickets());
         }
     }
 

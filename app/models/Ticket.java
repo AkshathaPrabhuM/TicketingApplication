@@ -10,7 +10,7 @@ import net.vz.mongodb.jackson.ObjectId;
 import play.modules.mongodb.jackson.MongoDB;
 
 @Entity
-public class Task
+public class Ticket
 {
 
     @Id
@@ -27,14 +27,14 @@ public class Task
 
     public String status;
 
-    private static JacksonDBCollection<Task, String> coll = MongoDB.getCollection("tasks", Task.class, String.class);
+    private static JacksonDBCollection<Ticket, String> coll = MongoDB.getCollection("tickets", Ticket.class, String.class);
 
-    public Task()
+    public Ticket()
     {
 
     }
 
-    public Task(String label, String description, String creator, String assignee, String status)
+    public Ticket(String label, String description, String creator, String assignee, String status)
     {
         this.custName = label;
         this.comments = description;
@@ -43,44 +43,44 @@ public class Task
         this.status = status;
     }
 
-    public static List<Task> all()
+    public static List<Ticket> all()
     {
-        return Task.coll.find().toArray();
+        return Ticket.coll.find().toArray();
     }
 
-    public static void create(Task task)
+    public static void create(Ticket ticket)
     {
-        Task.coll.save(task);
+        Ticket.coll.save(ticket);
     }
 
     public static void create(String label, String description, String creator, String assignee, String status)
     {
-        create(new Task(label, description, creator, assignee, status));
+        create(new Ticket(label, description, creator, assignee, status));
     }
 
     public static void delete(String id)
     {
-        Task task = Task.coll.findOneById(id);
-        if (task != null)
+        Ticket ticket = Ticket.coll.findOneById(id);
+        if (ticket != null)
         {
-            Task.coll.remove(task);
+            Ticket.coll.remove(ticket);
         }
     }
 
     public static void removeAll()
     {
-        Task.coll.drop();
+        Ticket.coll.drop();
     }
 
-    public static void update(Task task)
+    public static void update(Ticket ticket)
     {
-        Task.coll.updateById(task.id, task);
+        Ticket.coll.updateById(ticket.id, ticket);
     }
 
-    public static Task get(String id)
+    public static Ticket get(String id)
     {
-        Task task = Task.coll.findOneById(id);
-        return task;
+        Ticket ticket = Ticket.coll.findOneById(id);
+        return ticket;
     }
 
 }
