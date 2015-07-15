@@ -1,15 +1,25 @@
-What's new:
-
-- Updated scala version to 2.11.1
-
-First steps with Playframework 2.3.1 (Java) and MongoDb (Jackson)
+Ticketing Application
 --------------------------------------------------
+The Ticketing sytem application allows customer service representatives to register complaints from the customer.
 
-* Don't forget to start mongodb daemon! It should use the default host (localhost) and the default port.
+The features are:
+* Logging the ticket
+* Adding Comments to the Ticket
+* Changing the status of the Ticket
+* Assigning the Tickets
+* Viewing the Tickets
+* Deleting the Tickets
 
-* Run the application:
+Note: Authentication has not been added to the application. The work is is progress, once completed will be integrated here.
+
+Starting the Application
+--------------------------------------------------
+The steps to start the application are as follows:
+
+* Download this zip and extract it to desired location
+* Start the MongoDB server. It should use the default host (localhost) and the default port.
+* Run the application using the command  
 ```
-sbt run
+activator run
 ```
-
-Please report if there is any issue with running this tutorial, thanks!
+* Open the browser and open the page http://localhost:9000/
