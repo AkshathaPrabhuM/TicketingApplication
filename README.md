@@ -10,7 +10,6 @@ The features are:
 * Viewing the Tickets
 * Deleting the Tickets
 
-Note: Authentication has not been added to the application. The work is is progress, once completed will be integrated here.
 
 Starting the Application
 --------------------------------------------------
@@ -18,6 +17,16 @@ The steps to start the application are as follows:
 
 * Download this zip and extract it to desired location
 * Start the MongoDB server. It should use the default host (localhost) and the default port.
+* Create a collection in the Mongo Db with the name users. And add the default users in it.
+* Run the below scripts for it.
+```
+use TicketingSystem
+db.createCollection("users")
+db.users.insert({
+   username: 'aks', 
+   password: 'aks',
+})
+```
 * Run the application using the command  
 ```
 activator run
