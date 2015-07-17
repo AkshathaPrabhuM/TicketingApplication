@@ -8,8 +8,29 @@
 	<div class="jumbotron">
     	<h1>Ticketing Application</h1>      
     	<p>Keeps track of customer complaints..</p>      
+    	<div class="form-group" ng-show="loggedIn" align="right">
+	     	<label>Logged in as: </label>
+	     	<label>{{loggedInUser}}</label>
+	   		<button class="btn btn-primary" ng-click="logout()">Logout</button>
+	  	</div> 
   	</div>
   	
+  	<div class="col-md-6 col-md-offset-3" ng-hide="loggedIn">
+	<h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="form-control" ng-model="username" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form-control" ng-model="password" required />
+        </div>
+        <div>
+            <button ng-disabled="$invalid" class="btn btn-primary" ng-click="login(username, password)">Login</button>
+        </div>
+	</div>
+  	
+  	<div ng-show = "loggedIn">
   	
   	<div ng-show="@tickets.size() > 0">
     	<h3>Available Tickets</h3>
@@ -93,11 +114,11 @@
 	          		</select>
 	    		</div>
 	  		</div>
-	  		<center>
+	  		<div align="center">
 		  		<button class="btn btn-success" ng-readonly="incomplete">
 					<span class="glyphicon glyphicon-save"></span>  Submit Ticket
 				</button>
-			</center>
+			</div>
 		</form>
 	</div>
 	
@@ -140,16 +161,16 @@
 	          		</select>
 	    		</div>
 	  		</div>
-	  		<center>
+	  		<div align="center">
 	  			<button class="btn btn-success" ng-show="isUpdate" ng-disabled="isTicketClosed">
 					<span class="glyphicon glyphicon-upload"></span>  Update Ticket
 				</button>
-			</center>
-			<center>
+			</div>
+			<div align="center">
 				<button class="btn btn-success" ng-show="isAssign" ng-disabled="isTicketClosed">
 					<span class="glyphicon glyphicon-user"></span>  Assign Ticket
 				</button>
-			</center>
+			</div>
 		</form>
 		<br>
 		<center>
@@ -158,14 +179,50 @@
 			</button>
 		</center>
 	</div>
-</div>    
+</div>   
+</div> 
 
 <script>
-angular.module('myApp', []).controller('customersCtrl', function($scope) 
+angular.module('myApp', []).controller('customersCtrl', function($scope, $http) 
 {
 	$scope.isCreate=true;
 	$scope.isUpdate=false;
 	$scope.isAssign=false;
+	
+	if(window.localStorage.getItem('loggedInUser') !== null)
+  	{
+  		$scope.loggedIn = true;
+  		$scope.loggedInUser = window.localStorage.getItem('loggedInUser');
+  	}
+ 	else
+  	{
+  		$scope.loggedIn = false;
+  		$scope.loggedInUser = "";
+ 	}
+	
+	$scope.login = function(username, password) 
+	{
+    $http.get('/users/' + username + '/' + password + '/').success(function(response) 
+    	{
+      		if(response === true) 
+      		{
+      			$scope.loggedIn = true;
+      			window.localStorage.setItem('loggedInUser', username);	
+      		}
+      		if(response === false) 
+      		{
+				$scope.loggedIn = false;
+				alert('Either Username or Password is invalid! Please try again!');
+      		}
+	    });
+	};
+	
+	$scope.logout = function() 
+	{
+		window.localStorage.removeItem('loggedInUser');
+		$scope.loggedIn=false;
+		$scope.loggedInUser="";
+	};
 
 	$scope.createTicket = function() 
 	{

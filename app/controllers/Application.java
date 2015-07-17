@@ -1,7 +1,9 @@
 package controllers;
 
 import models.Ticket;
+import models.User;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -37,6 +39,11 @@ public class Application extends Controller
     {
         Ticket.delete(id);
         return redirect(routes.Application.tickets());
+    }
+    
+    public static Result login(String username, String password)
+    {
+        return ok(Json.toJson(User.login(username, password)));
     }
 
     public static Result updateTicket()
